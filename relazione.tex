@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{url}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{footnote}
+\usepackage{float}
+\usepackage{textcomp}
+\usepackage[colorinlistoftodos]{todonotes}
+%\usepackage[hidelinks]{hyperref}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
+
+%Layout di pagina
+\geometry{
+	a4paper,
+	total={160mm,225mm},
+	left=25mm,
+	top=25mm
+}
+
+%intestazione e piè di pagina
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\setlength\headheight{57pt}
+\lhead{Relazione del progetto \textbf{DevSpace}}
+\lfoot{DevSpace}
+\rfoot{Pagina \thepage\ di \pageref{LastPage}}
+
+
+%\newcommand{\code}[1]{\texttt{#1}}
+\interfootnotelinepenalty=10000
+\DeclareTextFontCommand{\code}{\ttfamily\hyphenchar\font=45\relax}
+
+\begin{document}
+
+	\include{header}
+
+	\newpage
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Problema}
+	Si vuole massimizzare il numero di ore che uno studente universitario può investire nelle sue attività quotidiane permettendogli in questo modo di sprecarne il minimo possibile. Per fare ciò è necessario definire una routine settimanale che sfrutti il suo tempo al meglio.
+	Le giornate dello studente sono suddivisibili principalmente in tre fasce orarie.
+	\begin{itemize}
+		\item {\textbf{Mattina}: va dalle 8:00 fino alle 13:00.}
+		\item{\textbf{Pomeriggio}: va dalle 14:00 fino alle 19:00.}
+		\item{\textbf{Sera}: va dalle 20:00 fino alle 23:00.}		
+	\end{itemize}
+	Di seguito è presente una lista delle principali attività che lo studente può compiere durante le sue giornate:
+	\begin{itemize}
+		\item \textbf{Seguire le lezioni}: Lo studente per poter studiare efficacemente deve seguire tutte le lezioni. Di seguito è presente una tabella in cui vengono indicate le fasce orarie in cui lo studente ha lezione.
+		\item \textbf{Studiare}: Lo studente per superare con successo i vari esami universitari deve dedicare un minimo di 15 ore settimanali di studio. Lo studente inoltre per mantenere la concentrazione non può fare più di 2:00 di studio consecutive, e fare un minimo di 15 minuti di pausa tra una sessione di studio e l'altra. Tuttavia non può effettuare sessioni di studio di durata minore di 1:00 in quanto sarebbero di efficacia praticamente nulla.
+		\item \textbf{Palestra}: Lo studente deve andare in palestra un minimo di tre volte a settimana. Per avere tempi di recupero tra un allenamento e l'altro lo studente non può andare in palestra se ci è già andato il giorno precedente. La palestra è chiusa la sera e nei weekend anche il pomeriggio. Per effettuare un allenamento lo studente impiega mediamente circa 2:00 ore.
+
+	\end{itemize}
+	Ogni volta che lo studente interrompe l'esecuzione di un attività per cominciarne un altra  è necessario spendere 15 minuti per la preparazione.
+
+\end{document}
