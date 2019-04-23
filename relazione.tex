@@ -14,7 +14,9 @@
 %\usepackage[hidelinks]{hyperref}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
-
+\newenvironment{sistema}% 
+{\left\lbrace\begin{array}{@{}l@{}}}% 
+	{\end{array}\right.}
 %Layout di pagina
 \geometry{
 	a4paper,
@@ -49,22 +51,67 @@
 	\newpage
 	
 	\section{Problema}
-	Un azienda siderurgica possiede 4 fabbriche dislocate in punti diversi della città. Ogni fabbrica produce principalmente 3 prodoti distinti in quantità diverse.
-	Negli ultimi mesi è stata effettuata una ricerca molto approffondita sulla produttività di ciascuna fabbrica permettendo così di realizzare una stima abbastanza precisa del numero di unità prodotte in ciascuna fabbrica ogni mese. \\
-	La stima è riassunta in modo tabellare di seguito.\\
-	TABELLA\\
-	L'azienda di recente inoltre è entrata in contatto con quattro  nuovi clienti i quali per ogni unità di prodotto a loro recapitata sono disposti a pagare le seguenti quantità di denaro.\\
-	TABELLA\\
-	Tuttavia ogni azienda per poter stabilire un contratto richiede che le venga fornita una quantità minima di unità di prodotti. Più nello specifico:
-	\begin{itemize}
-		\item L'azienda 1 richiede X unità di A,  X unità di B ed X unità di C.
-		\item L'azienda 2 richiede X unità di A,  X unità di B ed X unità di C
-		\item L'azienda 3 richiede X unità di A,  X unità di B ed X unità di C
-		\item L'azienda 4 richiede X unità di A,  X unità di B ed X unità di C
-	\end{itemize}
-	Inoltre l'Azienda 1 e 3 sono rivali ed hanno stabilito che nessuna delle due intende firmare un contratto se viene rifornita anche l'azienda rivale.\\
-	Di seguito sono riportati i costi necessari per spedire un camion pieno di prodotti dalle sede delle aziende alla sede più vicina dei clienti che si vuole rifornire.\\
-	TABELLA\\
-	Considerando che un camion utilizzato per effettuare le spedizioni può contenere al massimo X unità di A e che B occupa la metà dello spazio di A mentre al contrario C ne occupa il doppio, si richiede di massimizzare il guadagno complessivo dell'azienda.
+	Un azienda siderurgica produce tre delle principali componenti fondamentali per la realizzazione di motori per auto, le quali verranno chiamate come componenti A, B e C per comodità.\\
+	Ogni componente per essere realizzata deve seguire uno specifico iter composto da 3 lavorazioni le quali devono essere eseguite obbligatoriamente in una specifica sequenza.\\
+	All'interno della seguente tabella è possibile vedere, per ogni tipologia di componente e lavorazione, il numero di unità che è possibile completare in un ora.
+	
+	\begin{table}[H]
+		\setlength{\tabcolsep}{15pt} % Default value: 6pt
+		\renewcommand{\arraystretch}{2} % Default value: 1
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				& \textbf{Lavorazione 1} & \textbf{Lavorazione 2} & \textbf{Lavorazione 3} \\ \hline
+				\textbf{A} &      10      &      8      &    11        \\ \hline
+				\textbf{B} &       8     &       7     &      9      \\ \hline
+				\textbf{C} &        13    &      10      &    15       \\ \hline
+			\end{tabular}
+		\end{center}
+	\end{table}
 
+	Attualmente l'azienda possiede solamente una macchina per ogni tipologia di lavorazione. Ogni macchina può lavorare solo ed esclusivamente su una tipologia di componente per volta e per un massimo di 8 ore complessive a giorno.\\
+	Ogni qualvolta sia necessario passare dalla lavorazione di un componente all'altro durante la giornata è necessario effettuare una configurazione del macchinario di circa un ora.\\
+	Ogni componente non può subire due lavorazioni nello stesso giorno in quanto deve effettuare un periodo di riposo per evitare di alterarne la qualità.\\
+	Tra una lavorazione e l'altra ogni componente deve effettuare un periodo di riposo, per questo motivo non è possibile effettuare effettuare due lavorazioni sulla stessa unità lo stesso giorno.
+	Ogni macchina ha un costo orario, in particolare:
+	\begin{itemize}
+		\item il macchinario 1 costa 4 all'ora;
+		\item il macchinario 2 costa 5 all'ora;
+		\item il macchinario 3 costa 3 all'ora.
+	\end{itemize}
+	Attualmente l'azienda ha stipulato un contratto con un azienda la quale paga:
+	\begin{itemize}
+		\item 30 per ogni unità di componente 1
+		\item 25 per ogni unità di componente 2
+		\item 40 per ogni unità di componetne 3
+	\end{itemize}
+	Essa inoltre richiede una quantita minima di:
+	\begin{itemize}
+		\item 10 unità di componente 1;
+		\item 15 unità di componente 2;
+		\item 13 unità di componente 3.
+	\end{itemize}
+	Inoltre per ogni unità non recapitata l'azienda è costretta a pagare una penale di 35 euro.
+	\pagebreak
+	\section{Modello Matematico}
+	\subsection{Variabili decisionali}
+	\begin{itemize}
+		\item \( x_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Numero di ore in cui vengono lavorati pezzi di tipo p all'interno della macchina m nel giorno g.
+		\item \( y_{psg} : p \in \{A, B, C\},\ s \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Numero di pezzi di tipo p che hanno terminato la lavorazione di tipo s durante il giorno g.
+		\item \( y_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Variabile binaria che vale:
+		\[ 
+			y_{pmg}=
+			\begin{sistema} 
+				\: 1 \quad se\ la\ macchina\ m\ ha\ lavorato\ a\ pezzi\ di\ tipo\ p\ il\ giorno\ g\\
+				\: 0 \quad altrimenti \\ 
+			\end{sistema} 
+		\]
+	\end{itemize}
+	\subsection{Parametri}
+	\begin{itemize}
+		\item \( v_p : p \in \{A, B, C\} \): prezzo di vendita della componente p.
+		\item \( c_m : m \in \{1, 2, 3\} \): costo orario della macchina m
+		\item \( po_{pm} : p \in \{A, B, C\},\ m \in \{1, 2, 3\}\): produzione oraria della componente p all'interno della macchina m.
+		\item \( m_p : p \in \{A, B, C\}\): numero minimo di componenti p richieste.
+	\end{itemize}
 \end{document}
