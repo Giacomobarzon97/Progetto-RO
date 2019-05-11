@@ -1,0 +1,43 @@
+set Prodotti := A B C;
+set Giorni := lun mar mer gio ven sab dom;
+set Stati:= grezzo 1 2 3;
+
+param     v :=
+A		  30
+B		  25
+C		  40
+;
+
+
+param    c :=
+grezzo   15
+1		 10
+2		 25
+3		 0
+;
+
+param 	 po :    grezzo    1    2    3 :=
+A                10        8    11   0         
+B                8         7    9    0
+C                13        10   15   0
+;
+
+param    minUnit :=
+A		 10
+B		 15
+C		 13
+;
+
+param 	 penale :=
+A		 50
+B		 50
+C		 50
+;
+
+param 	 startingUnits :=
+A		 200
+B	  	 300
+C		 150
+;
+
+param o :=8;

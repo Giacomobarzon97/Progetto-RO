@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage{url}
+\usepackage{amsmath, amsfonts, amssymb}
 \usepackage[hang,flushmargin]{footmisc}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -31,8 +32,8 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 \setlength\headheight{57pt}
-\lhead{Relazione del progetto \textbf{DevSpace}}
-\lfoot{DevSpace}
+\lhead{Relazione del progetto di Ricerca Operativa}
+\lfoot{Barzon Giacomo}
 \rfoot{Pagina \thepage\ di \pageref{LastPage}}
 
 
@@ -52,7 +53,8 @@
 	
 	\section{Problema}
 	Un azienda siderurgica produce tre delle principali componenti fondamentali per la realizzazione di motori per auto, le quali verranno chiamate come componenti A, B e C per comodità.\\
-	Ogni componente per essere realizzata deve seguire uno specifico iter composto da 3 lavorazioni le quali devono essere eseguite obbligatoriamente in una specifica sequenza.\\
+	Ogni componente per essere considerata come completata, e quindi pronta ad essere commercializzata, deve seguire uno specifico iter composto da 3 lavorazioni le quali devono essere eseguite obbligatoriamente in una specifica sequenza.\\
+	Tra una lavorazione e l'altra ogni componente deve effettuare un periodo di riposo, per questo motivo non è possibile effettuare effettuare due lavorazioni sulla stessa unità lo stesso giorno.\\
 	All'interno della seguente tabella è possibile vedere, per ogni tipologia di componente e lavorazione, il numero di unità che è possibile completare in un ora.
 	
 	\begin{table}[H]
@@ -69,10 +71,8 @@
 		\end{center}
 	\end{table}
 
-	Attualmente l'azienda possiede solamente una macchina per ogni tipologia di lavorazione. Ogni macchina può lavorare solo ed esclusivamente su una tipologia di componente per volta e per un massimo di 8 ore complessive a giorno.\\
+	Attualmente l'azienda possiede solamente una macchina dedicata a ciascuna tipologia di lavorazione lavorazione. Ogni macchina può lavorare solo ed esclusivamente su una tipologia di componente per volta e per un massimo di 8 ore complessive a giorno.\\
 	Ogni qualvolta sia necessario passare dalla lavorazione di un componente all'altro durante la giornata è necessario effettuare una configurazione del macchinario di circa un ora.\\
-	Ogni componente non può subire due lavorazioni nello stesso giorno in quanto deve effettuare un periodo di riposo per evitare di alterarne la qualità.\\
-	Tra una lavorazione e l'altra ogni componente deve effettuare un periodo di riposo, per questo motivo non è possibile effettuare effettuare due lavorazioni sulla stessa unità lo stesso giorno.
 	Ogni macchina ha un costo orario, in particolare:
 	\begin{itemize}
 		\item il macchinario 1 costa 4 all'ora;
@@ -85,25 +85,35 @@
 		\item 25 per ogni unità di componente 2
 		\item 40 per ogni unità di componetne 3
 	\end{itemize}
-	Essa inoltre richiede una quantita minima di:
+	Essa inoltre richiede settimanalmente una quantità minima di:
 	\begin{itemize}
 		\item 10 unità di componente 1;
 		\item 15 unità di componente 2;
 		\item 13 unità di componente 3.
 	\end{itemize}
-	Inoltre per ogni unità non recapitata l'azienda è costretta a pagare una penale di 35 euro.
+	Per ogni unità non recapitata l'azienda è costretta a pagare una penale di 35 euro.\\
+	Definire un modello matematico che permetta di determinare il miglior processo produttivo ai fini di massimizzare i guadagni settimanali.
 	\pagebreak
 	\section{Modello Matematico}
 	\subsection{Variabili decisionali}
 	\begin{itemize}
-		\item \( x_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Numero di ore in cui vengono lavorati pezzi di tipo p all'interno della macchina m nel giorno g.
-		\item \( y_{psg} : p \in \{A, B, C\},\ s \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Numero di pezzi di tipo p che hanno terminato la lavorazione di tipo s durante il giorno g.
-		\item \( y_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{lun, mar, mer, gio, ven, sab, dom\}\): Variabile binaria che vale:
+		\item \( x_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Numero di ore in cui vengono lavorati pezzi di tipo p all'interno della macchina m nel giorno g.
+		\item \( y_{psg} : p \in \{A, B, C\},\ s \in \{0, 1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Numero di pezzi di tipo p che hanno terminato la lavorazione di tipo s durante il giorno g.
+		\item\(ma_p : p \in \{ A,B,C\} \): Numero di pezzi di tipo p non prodotti entro la fine della settimana.
+		\item \( z_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Variabile binaria che vale:
 		\[ 
-			y_{pmg}=
+			z_{pmg}=
 			\begin{sistema} 
-				\: 1 \quad se\ la\ macchina\ m\ ha\ lavorato\ a\ pezzi\ di\ tipo\ p\ il\ giorno\ g\\
-				\: 0 \quad altrimenti \\ 
+				\textrm{1 \quad se la macchina m ha lavorato a pezzi di tipo p il giorno g}\\
+				\textrm{0 \quad altrimenti} \\ 
+			\end{sistema} 
+		\]
+		\item \( k_{mg} : m \in \{1,2,3\}, g \in \{1,2,3,4,5,6,7\} \) : Variabile binaria che vale:
+		\[ 
+			k_{pmg}=
+			\begin{sistema} 
+				\textrm{1 \quad se la macchina m  ha lavorato su almeno una tipologia di componente il giorno g}\\
+				\textrm{0 \quad altrimenti}
 			\end{sistema} 
 		\]
 	\end{itemize}
@@ -113,5 +123,53 @@
 		\item \( c_m : m \in \{1, 2, 3\} \): costo orario della macchina m
 		\item \( po_{pm} : p \in \{A, B, C\},\ m \in \{1, 2, 3\}\): produzione oraria della componente p all'interno della macchina m.
 		\item \( m_p : p \in \{A, B, C\}\): numero minimo di componenti p richieste.
+		\item \(p_p\): costo penale componente p.
+	\end{itemize}
+	\subsection{Funzione obbiettivo}
+	$$
+		max 
+		\underbrace{\sum\limits_{\forall p} (v_p \sum\limits_{\forall g} y_{ps^*g})}_\textrm{Guadagni}
+		-
+		\underbrace{\sum\limits_{\forall m}(c_m \sum\limits_{\forall p,g}x_{pmg})}_\textrm{Costi}
+		-
+		\underbrace{\sum\limits_{\forall p}p_p*ma_p}_\textrm{Penale}
+	$$
+	Dove \(s^*\) rappresenta l'ultima lavorazione che ogni componente deve superare per essere completata. 
+	\subsection{Vincoli}
+	\begin{itemize}
+		\item Attivazione variabile \( y_{p,s,g} \):
+		$$
+			\forall p,s,g:y_{p,s,g}= 
+			\underbrace{y_{p,s,g-1}}_{ \substack{\textrm{Numero unità }\\ \textrm{del} \\ \textrm{del giorno prima}}}
+			+
+			\underbrace{po_{p,s-1} \cdot x_{p,s-1,g}}_{\substack{\textrm{Numero unità}\\ \textrm{prodotte oggi}}}
+			-
+			\underbrace{po_{p,s} \cdot x_{p,s,g}}_{\substack{\textrm{Numero unità }\\ \textrm{stato completato} \\ \textrm{oggi}}}
+		$$
+		\item Numero di prodotti che hanno completato un determinato stato deve essere inferiore al numero di prodotti che avevo nello stato precedente il giorno prima:
+		$$
+			\forall p,s>1,g>1 : y_{p,s,g} \leq y_{p,s-1,g-1}
+		$$
+		\item Attivazione variabile \( z_{p,m,g} \):
+		$$
+			\forall p,m,g : x_{p,m,g}\leq z_{p,m,g}*M
+		$$
+		\item Attivazione variabile \( k_{p,m,g} \):
+		$$
+			\forall m,g : \sum\limits_{\forall p} x_{p,m,g}\leq z_{m,g}*M
+		$$
+		\item Attivazione variabile \(ma_p\):
+		$$
+			\forall p : y_{p,s^*,g^*}+ma_p \geq m_p
+		$$
+		Dove \(s^*\) indica l'ultimo stato in cui è possibile che risieda la componente p e \(g*\) indica l'ultimo giorno della settimana.
+		\item Numero di ore lavorative di ogni macchina inferiore ad 8 ore:
+		$$
+			\forall m,g : 
+			\underbrace{\sum\limits_{\forall p}x_{p,m,g}}_{\substack{\textrm{Somma complessiva}\\ \textrm{ore macchina}}}
+			+
+			\underbrace{\sum\limits_{\forall p}z_{p,m,g}-k_{m,g}}_{\substack{\textrm{Numero di}\\ \textrm{cambi produzione} \\ \textrm{effettuati}}}
+			\leq 8
+		$$
 	\end{itemize}
 \end{document}
