@@ -9,10 +9,3 @@ solve;
 
 display profitto;
 display x;
-display z;
-display y;
-display {p in Prodotti, g in Giorni} sum{m in Stati} y[p,m,g];
-
-display {g in Giorni, m in Stati} sum{p in Prodotti} x[p,m,g]+sum{p in Prodotti}z[p,m,g]-k[m,g];
-display sum{p3 in Prodotti}penale[p3]*ma[p3];
-#display {g in Giorni} sum{p in Prodotti, m in Stati} (z[p,m,g]-k[m,g])

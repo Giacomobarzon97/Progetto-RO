@@ -10,10 +10,10 @@ C		  40
 
 
 param    c :=
-grezzo   		 15
-rifinito		 25
-vernciato		 10
-lucidato		 0
+grezzo   15
+rifinito		 30
+vernciato		 50
+lucidato		 80
 ;
 
 param 	 po :    grezzo    rifinito    vernciato    lucidato :=
@@ -29,15 +29,15 @@ C		 10
 ;
 
 param 	 penale :=
-A		 35
-B		 35
-C		 35
+A		 100
+B		 100
+C		 100
 ;
 
 param 	 startingUnits :=
-A		 200
-B	  	 300
-C		 100
+A		 40
+B	  	 80
+C		 20
 ;
 
 param o :=8;

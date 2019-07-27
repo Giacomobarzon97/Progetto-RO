@@ -14,6 +14,33 @@
 \usepackage[colorinlistoftodos]{todonotes}
 %\usepackage[hidelinks]{hyperref}
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{courier}
+\usepackage{xcolor}
+\definecolor{darkGreen}{rgb}{0.01, 0.75, 0.24}
+
+
+
+\lstdefinelanguage{AMPL}{keywords={set,param,var,arc,integer,minimize,maximize,subject,to,node,sum,in,Current,complements,integer,solve_result_num,IN,contains,less,suffix,INOUT,default,logical,sum,Infinity,dimen,max,symbolic
+		,Initial,div,min,table,LOCAL,else,option,then,OUT,environ,setof ,union,all,exists,shell_exitcodeuntil,binary,forall,solve_exitcodewhile ,by,if,solve_messagewithin,check,in,solve_result, prev, ord, first, member, and
+	},sensitive=true,comment=[l]{\#}}
+
+\lstset{frame=tb,
+	language=AMPL,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\ttfamily},
+    numbers=left,
+	stepnumber=1,
+	keywordstyle=\bfseries\color{blue},
+	commentstyle=\color{darkGreen},
+	stringstyle=\color{red},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
 \hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
 \newenvironment{sistema}% 
 {\left\lbrace\begin{array}{@{}l@{}}}% 
@@ -52,124 +79,594 @@
 	\newpage
 	
 	\section{Problema}
-	Un azienda siderurgica produce tre delle principali componenti fondamentali per la realizzazione di motori per auto, le quali verranno chiamate come componenti A, B e C per comodità.\\
-	Ogni componente per essere considerata come completata, e quindi pronta ad essere commercializzata, deve seguire uno specifico iter composto da 3 lavorazioni le quali devono essere eseguite obbligatoriamente in una specifica sequenza.\\
-	Tra una lavorazione e l'altra ogni componente deve effettuare un periodo di riposo, per questo motivo non è possibile effettuare effettuare due lavorazioni sulla stessa unità lo stesso giorno.\\
-	All'interno della seguente tabella è possibile vedere, per ogni tipologia di componente e lavorazione, il numero di unità che è possibile completare in un ora.
-	
+	Un azienda siderurgica è specializzata nella produzione di tre componenti fondamentali per la costruzione di motori auto, che noi chiameremo come A,B e C per comodità.\\
+	Essa attualmente dispone di:
+	\begin{itemize}
+		\item 200 unità "grezze" di A;
+		\item 300 unità "grezze" di B;
+		\item 100 unità "grezze" di C.
+	\end{itemize}
+	Esse tuttavia non sono ancora pronte per essere vendute. Ogni unità infatti, prima di poter essere considerata come completata, e quindi pronta ad essere commercializzata, deve attraversare 3 fasi sequenziali:
+	\begin{itemize}
+		\item rifinitura;
+		\item verniciatura;
+		\item lucidatura;
+	\end{itemize}
+	Tra una lavorazione e l'altra ogni unità deve effettuare un periodo di riposo, per questo motivo non è possibile effettuare due lavorazioni sulla stessa unità lo stesso giorno.\\
+	Attualmente l'azienda possiede una macchina distinta per ogni tipologia di lavorazione.
+	All'interno della seguente tabella è possibile vedere, per ogni tipologia di componente, il numero di unità che ciascuna macchina riesce a completare mediamente in un ora.
 	\begin{table}[H]
-		\setlength{\tabcolsep}{15pt} % Default value: 6pt
-		\renewcommand{\arraystretch}{2} % Default value: 1
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
 		\begin{center}
 			\begin{tabular}{|c|c|c|c|}
 				\hline
-				& \textbf{Lavorazione 1} & \textbf{Lavorazione 2} & \textbf{Lavorazione 3} \\ \hline
+				& \textbf{Rifinitura} & \textbf{Verniciatura} & \textbf{Lucidatura} \\ \hline
 				\textbf{A} &      10      &      8      &    11        \\ \hline
 				\textbf{B} &       8     &       7     &      9      \\ \hline
 				\textbf{C} &        13    &      10      &    15       \\ \hline
 			\end{tabular}
 		\end{center}
 	\end{table}
-
-	Attualmente l'azienda possiede solamente una macchina dedicata a ciascuna tipologia di lavorazione lavorazione. Ogni macchina può lavorare solo ed esclusivamente su una tipologia di componente per volta e per un massimo di 8 ore complessive a giorno.\\
-	Ogni qualvolta sia necessario passare dalla lavorazione di un componente all'altro durante la giornata è necessario effettuare una configurazione del macchinario di circa un ora.\\
-	Ogni macchina ha un costo orario, in particolare:
+	Ogni macchina non può lavorare al di fuori delle normali 8 ore lavorative in cui è aperta l'azienda ogni giorno.
+	Ogni macchina viene utilizzata per effettuare lavorazioni su ogni tipologia di componente. Se durante il corso della giornata si rivelasse necessario passare dalla lavorazione di una tipologia di componente ad un altra è necessario effettuare un periodo di configurazione di un ora in cui la macchina interessata è inutilizzabile.
+	Ogni macchina inoltre presenta un costo orario, in particolare:
 	\begin{itemize}
-		\item il macchinario 1 costa 4 all'ora;
-		\item il macchinario 2 costa 5 all'ora;
-		\item il macchinario 3 costa 3 all'ora.
+		\item Il macchinario atto alla rifinitura costa 15 euro all'ora;
+		\item Il macchinario atto alla verniciatura costa 25 euro all'ora;
+		\item Il macchinario atto alla lucidatura costa 10 euro all'ora.
 	\end{itemize}
 	Attualmente l'azienda ha stipulato un contratto con un azienda la quale paga:
 	\begin{itemize}
-		\item 30 per ogni unità di componente 1
-		\item 25 per ogni unità di componente 2
-		\item 40 per ogni unità di componetne 3
+		\item 30 per ogni unità di A;
+		\item 25 per ogni unità di B;
+		\item 40 per ogni unità di C.		
 	\end{itemize}
-	Essa inoltre richiede settimanalmente una quantità minima di:
+	Essa inoltre richiede che per l'inizio della prossima settimana le venga recapitata una quantità minima di:
 	\begin{itemize}
-		\item 10 unità di componente 1;
-		\item 15 unità di componente 2;
-		\item 13 unità di componente 3.
+		\item 20 unità di A;
+		\item 40 unità di B;
+		\item 10 unità di C.
 	\end{itemize}
 	Per ogni unità non recapitata l'azienda è costretta a pagare una penale di 35 euro.\\
-	Definire un modello matematico che permetta di determinare il miglior processo produttivo ai fini di massimizzare i guadagni settimanali.
+	Definire un modello matematico che permetta di determinare il miglior processo produttivo ai fini di massimizzare i guadagni considerando che l'azienda dispone di un'intera settimana lavorativa (da lunedì a venerdì) per completare la lavorazione delle componenti "grezze" di cui dispone.
 	\pagebreak
 	\section{Modello Matematico}
 	\subsection{Variabili decisionali}
 	\begin{itemize}
-		\item \( x_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Numero di ore in cui vengono lavorati pezzi di tipo p all'interno della macchina m nel giorno g.
-		\item \( y_{psg} : p \in \{A, B, C\},\ s \in \{0, 1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Numero di pezzi di tipo p che hanno terminato la lavorazione di tipo s durante il giorno g.
+		\item \( x_{p,s,g} : p \in \{A, B, C\},\ s \in \{grezzo, rifinito, verniciato, lucidato\},\ g \in \{lun, mar, mer, gio, ven\}\): Numero di ore in cui vengono lavorati pezzi di tipo p all'interno della macchina che si occupa di far passare l'unità dallo stato s al successivo il giorno g.
+		\item \( y_{p,s,g} : p \in \{A, B, C\},\ s \in \{grezzo, rifinito, verniciato, lucidato\},\ g \in \{lun, mar, mer, gio, ven\}\): Numero di pezzi di tipo p che sono nello stato s durante il giorno g.
 		\item\(ma_p : p \in \{ A,B,C\} \): Numero di pezzi di tipo p non prodotti entro la fine della settimana.
-		\item \( z_{pmg} : p \in \{A, B, C\},\ m \in \{1, 2, 3\},\ g \in \{1, 2, 3, 4, 5, 6, 7\}\): Variabile binaria che vale:
+		\item \( z_{p,s,g} : p \in \{A, B, C\},m \in \{grezzo, rifinito, verniciato, lucidato\},g \in \{lun, mar, mer, gio, ven\}\): Variabile binaria che vale:
 		\[ 
-			z_{pmg}=
+			z_{p,s,g}=
 			\begin{sistema} 
-				\textrm{1 \quad se la macchina m ha lavorato a pezzi di tipo p il giorno g}\\
+				\textrm{1 \quad se la macchina che si occupa di far passare le unità dallo stato }\\
+				\textrm{\ \ \quad al successivo ha lavorato a pezzi di tipo p il giorno g}\\ \\
 				\textrm{0 \quad altrimenti} \\ 
 			\end{sistema} 
 		\]
-		\item \( k_{mg} : m \in \{1,2,3\}, g \in \{1,2,3,4,5,6,7\} \) : Variabile binaria che vale:
+		\item \( k_{s,g} : s \in \{grezzo, rifinito, verniciato, lucidato\}, g \in \{lun, mar, mer, gio, ven\} \) : Variabile binaria che vale:
 		\[ 
-			k_{pmg}=
+			k_{s,g}=
 			\begin{sistema} 
-				\textrm{1 \quad se la macchina m  ha lavorato su almeno una tipologia di componente il giorno g}\\
+				\textrm{1 \quad se la macchina che si occupa di far passare le unità dallo stato}\\
+				\textrm{\ \ \quad al successivo ha lavorato su almeno una tipologia di componente il giorno g}\\ \\
 				\textrm{0 \quad altrimenti}
 			\end{sistema} 
 		\]
 	\end{itemize}
 	\subsection{Parametri}
 	\begin{itemize}
-		\item \( v_p : p \in \{A, B, C\} \): prezzo di vendita della componente p.
-		\item \( c_m : m \in \{1, 2, 3\} \): costo orario della macchina m
-		\item \( po_{pm} : p \in \{A, B, C\},\ m \in \{1, 2, 3\}\): produzione oraria della componente p all'interno della macchina m.
-		\item \( m_p : p \in \{A, B, C\}\): numero minimo di componenti p richieste.
-		\item \(p_p\): costo penale componente p.
+		\item \( v_p : p \in \{A, B, C\} \): prezzo di vendita della componente p;
+		\item \( c_s : s \in \{grezzo, rifinito, verniciato, lucidato\} \): costo orario della macchina s ;
+		\item \( po_{p,s} : p \in \{A, B, C\},\ s \in \{grezzo, rifinito, verniciato, lucidato\}\): produzione oraria della componente p della macchina che si occupa di far passare l'unità dallo stato s al successivo;
+		\item \( m_p : p \in \{A, B, C\}\): numero minimo di componenti p richieste;
+		\item \(p_p\) : costo penale componente p;
+		\item \(s_p : p \in \{A, B, C\} \): numero di unità grezze di partenza;
+		\item \(o \) : Numero di ore massimo in cui è possibile utilizzare i macchinari.
 	\end{itemize}
 	\subsection{Funzione obbiettivo}
 	$$
 		max 
-		\underbrace{\sum\limits_{\forall p} (v_p \sum\limits_{\forall g} y_{ps^*g})}_\textrm{Guadagni}
+		\underbrace{\sum\limits_{\forall p} (v_p*y_{p,lucidato,ven})}_\textrm{Guadagni}
 		-
 		\underbrace{\sum\limits_{\forall m}(c_m \sum\limits_{\forall p,g}x_{pmg})}_\textrm{Costi}
 		-
 		\underbrace{\sum\limits_{\forall p}p_p*ma_p}_\textrm{Penale}
 	$$
-	Dove \(s^*\) rappresenta l'ultima lavorazione che ogni componente deve superare per essere completata. 
 	\subsection{Vincoli}
 	\begin{itemize}
-		\item Attivazione variabile \( y_{p,s,g} \):
+		\item Attivazione variabile \( y_{p,s,g} \) con s e g di ordine maggiore ad 1:
 		$$
-			\forall p,s,g:y_{p,s,g}= 
+			\forall p,s>1,g>1:y_{p,s,g}= 
 			\underbrace{y_{p,s,g-1}}_{ \substack{\textrm{Numero unità }\\ \textrm{del} \\ \textrm{del giorno prima}}}
 			+
 			\underbrace{po_{p,s-1} \cdot x_{p,s-1,g}}_{\substack{\textrm{Numero unità}\\ \textrm{prodotte oggi}}}
 			-
 			\underbrace{po_{p,s} \cdot x_{p,s,g}}_{\substack{\textrm{Numero unità }\\ \textrm{stato completato} \\ \textrm{oggi}}}
 		$$
+		\item Attivazione variabile \( y_{p,s,g} \) con s e g di ordine uguale ad 1:
+
+		$$
+			\forall p : y_{p,\ grezzo,\ lun}=s_p-po_p,\ grezzo * x_p,\ grezzo,\ lun
+		$$
+		\item Attivazione variabile \( y_{p,s,g} \) con s di ordine uguale ad 1:
+		$$
+			\forall p,g>1 :
+			y_{p,\ grezzo,\ g}=y_{p,\ grezzo,\ g-1}-po_{p,\ grezzo}*x_{p,\ grezzo,\ g}
+		$$
+		\item Attivazione variabile \( y_{p,s,g} \) con ordine di g uguale ad 1 ed s pari a 2:
+		$$
+		\forall p : y_{p,\ rifinito,\ lun}=po_{p,\ grezzo}* x_{p,\ grezzo,\ lun}
+		$$
+		\item Attivazione variabile \( y_{p,s,g} \) con ordine di g uguale ad 1 ed s maggiore a 2:
+		$$
+		\forall p,s>2 : y_{p,\ s, lun}=0;
+		$$
 		\item Numero di prodotti che hanno completato un determinato stato deve essere inferiore al numero di prodotti che avevo nello stato precedente il giorno prima:
 		$$
 			\forall p,s>1,g>1 : y_{p,s,g} \leq y_{p,s-1,g-1}
 		$$
-		\item Attivazione variabile \( z_{p,m,g} \):
+		\item Come regola precedente ma nel caso in cui si utilizza \(lun \in Giorni\) e \(rifinito \in Stati\):
 		$$
-			\forall p,m,g : x_{p,m,g}\leq z_{p,m,g}*M
+		\forall p : y_{p,\ rifinito,\ lun}<=y_{p,\ grezzo,\ lun};
 		$$
-		\item Attivazione variabile \( k_{p,m,g} \):
+		\item Attivazione variabile \( z_{p,s,g} \):
 		$$
-			\forall m,g : \sum\limits_{\forall p} x_{p,m,g}\leq z_{m,g}*M
+			\forall p,s,g : x_{p,s,g}\leq z_{p,s,g}*M
+		$$
+		\item Attivazione variabile \( k_{p,s,g} \):
+		$$
+			\forall s,g : \sum\limits_{\forall p} x_{p,s,g}\leq k_{s,g}*M
 		$$
 		\item Attivazione variabile \(ma_p\):
 		$$
-			\forall p : y_{p,s^*,g^*}+ma_p \geq m_p
+			\forall p : y_{p,\ lucidato,\ ven}+ma_p \geq m_p
 		$$
-		Dove \(s^*\) indica l'ultimo stato in cui è possibile che risieda la componente p e \(g*\) indica l'ultimo giorno della settimana.
-		\item Numero di ore lavorative di ogni macchina inferiore ad 8 ore:
+		\item Numero di ore lavorative di ogni macchina inferiore ad \emph{o} ore:
 		$$
-			\forall m,g : 
-			\underbrace{\sum\limits_{\forall p}x_{p,m,g}}_{\substack{\textrm{Somma complessiva}\\ \textrm{ore macchina}}}
+			\forall s,g : 
+			\underbrace{\sum\limits_{\forall p}x_{p,s,g}}_{\substack{\textrm{Somma complessiva}\\ \textrm{ore macchina}}}
 			+
-			\underbrace{\sum\limits_{\forall p}z_{p,m,g}-k_{m,g}}_{\substack{\textrm{Numero di}\\ \textrm{cambi produzione} \\ \textrm{effettuati}}}
-			\leq 8
+			\underbrace{\sum\limits_{\forall p}z_{p,s,g}-k_{s,g}}_{\substack{\textrm{Numero di}\\ \textrm{cambi produzione} \\ \textrm{effettuati}}}
+			\leq o
 		$$
 	\end{itemize}
+\pagebreak
+\section{Codice AMPL}
+\subsection{Modello}
+Viene qui proposto il file .mod utilizzato per rappresentare nel linguaggio AMPL il modello matematico descritto all'interno della sezione precedente.
+\begin{lstlisting}
+set Prodotti;
+set Giorni ordered;
+set Stati ordered;
+
+#Dichiarazione Parametri
+
+#Prezzi di vendita delle componenti
+param v{Prodotti};
+#Costo orario delle macchine
+param c{Stati};
+#produzione orari delle macchine in relazione a ciascun prodotto
+param po{Prodotti, Stati};
+#Numero minimo unita' richieste dal cliente
+param minUnit{Prodotti};
+#Penali da pagare per ogni unita' di prodotto non recapitata
+param penale{Prodotti};
+#Numero di unita' grezze di partenza
+param startingUnits{Prodotti};
+#Numero di ore massimo in cui e' possibile utilizzare i macchinari
+param o;
+
+#
+param M=8;
+
+#Dichiarazione Variabili
+
+#Numero di ore in cui il macchinario e' attivo 
+#su un determinato prodotto un determinato giorno
+var x{Prodotti, Stati, Giorni}>=0;
+#Numero di componenti di un determinato tipo in
+#un determinato stato prodotti durante uno specifico giorno
+var y{Prodotti, Stati, Giorni}>=0 integer;
+#Numero di unita' non recapitate
+var ma{Prodotti}>=0 integer;
+#Variabile binaria che vale 1 se la macchina 
+#ha lavorato ad un prodotto p il giorno g 0 altrimenti
+var z{Prodotti, Stati, Giorni} binary;
+#Variabile binaria che vale 1 se la macchina 
+#ha lavorato ad un qualsiasi prodotto il giorno g 0 altrimenti
+var k{Stati, Giorni} binary;
+
+#Funzione obbiettivo
+maximize profitto: sum{p in Prodotti} v[p]*y[p,last(Stati),last(Giorni)]
+-sum{m in Stati, p in Prodotti, g in Giorni} c[m]*x[p,m,g]
+-sum{p in Prodotti}penale[p]*ma[p]
+;
+
+#Attivazione della variabile Y  per ogni 
+#elemento di Giorni e Stati con ordine maggiore di 1
+s.t. attivazioneY
+{p in Prodotti, g in Giorni, s in Stati: ord(s)>1 and ord(g)>1}:
+y[p,s,g]=y[p,s,prev(g)]+po[p,prev(s)]*x[p,prev(s),g]
+-po[p,s]*x[p,s,g];
+
+#Attivazione della variabile Y con 
+#elementi di Giorni e stati con ordine uguale ad 1
+s.t. attivazioneYS0G0{p in Prodotti}:
+y[p,first(Stati),first(Giorni)]=startingUnits[p]
+-po[p,first(Stati)]*x[p,first(Stati),first(Giorni)];
+
+#Attivazione della variabile y con 
+#l'elemento di Stati con ordine uguale ad 1
+s.t. attivazioneYS0{p in Prodotti, g in Giorni:ord(g)>1}:
+y[p,first(Stati),g]=y[p,first(Stati),prev(g)]
+-po[p,first(Stati)]*x[p,first(Stati),g];
+
+#Attivazione della variabile y con l'elemento 
+#di Giorni con ordine uguale ad 
+#1 e quello di stati con ordine uguale a 2
+s.t. attivazioneYGOS2{p in Prodotti}:
+y[p,member(2,Stati),first(Giorni)]=
+po[p,first(Stati)]*x[p,first(Stati),first(Giorni)];
+
+#Attivazione della variabile y con l'elemento di Giorni 
+#con ordine uguale ad 1 e quello di stati 
+#con ordine uguale maggiore a 2
+s.t. attivazioneYGO{p in Prodotti, s in Stati:ord(s)>2}:
+y[p,s,first(Giorni)]=0;
+
+#Il numero di prodotti lavorati non puo' superare il numero di 
+#prodotti che si aveva il giorno prima nello stato precedente
+s.t. maxLav{p in Prodotti, g in Giorni, s in Stati:ord(s)>1 and ord(g)>1}: 
+y[p,s,g]<=y[p,prev(s),prev(g)]; 
+
+#Definizione della regola precedente ma nel caso 
+#in cui si utilizza l'elemento di giorni con cardinalita' 
+#pari ad 1 e di Stati con cardinalita' pari a 2
+s.t. maxLavYGOS2{p in Prodotti}:
+y[p,member(2,Stati),first(Giorni)]<=y[p,first(Stati),first(Giorni)];
+
+#Attivazione della variabile Ma
+s.t. attivazioneMa{p in Prodotti}:
+y[p,last(Stati), last(Giorni)]+ma[p]>=minUnit[p];
+
+#Attivazione della variabileZ
+s.t. attivazioneZ{p in Prodotti, g in Giorni, m in Stati}:
+x[p,m,g] <=z[p,m,g]*M;
+
+#Attivazione della variabile K
+s.t. attivazioneK{g in Giorni, m in Stati}:
+sum{p in Prodotti}x[p,m,g]<=k[m,g]*M;
+
+#Numero massimo di ore in cui la macchina puo' essere attiva
+s.t. maxOre{g in Giorni, m in Stati}:
+sum{p in Prodotti} x[p,m,g]+sum{p in Prodotti}z[p,m,g]-k[m,g]<=o;
+
+\end{lstlisting}
+\subsection{Dati}
+\subsubsection{Caso principale}
+Viene qui proposto il file .dat relativo al problema principale discusso precedentemente.
+\begin{lstlisting}
+set Prodotti := A B C;
+set Giorni := lun mar mer gio ven;
+set Stati:= grezzo rifinito vernciato lucidato;
+
+param     v :=
+A		  30
+B		  25
+C		  40
+;
+
+
+param    c :=
+grezzo   15
+rifinito		 10
+vernciato		 25
+lucidato		 0
+;
+
+param 	 po :    grezzo    rifinito    vernciato    lucidato :=
+A                10        8    	   11   		0         
+B                8         7    	   9    		0
+C                13        10   	   5   		    0
+;
+
+param    minUnit :=
+A		 20
+B		 40
+C		 10
+;
+
+param 	 penale :=
+A		 35
+B		 35
+C		 35
+;
+
+param 	 startingUnits :=
+A		 200
+B	  	 300
+C		 150
+;
+
+param o :=8;
+\end{lstlisting}
+Il risultato dell'esecuzione del programma coi dati forniti da come risultato un profitto massimo di 2537.
+Per ottenere il seguente risultato è fondamentale seguire il seguente processo produttivo.\\
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto A:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+		\textbf{Lunedì}    & 8               & 0                 & 0                   & 0                 \\ \hline
+		\textbf{Martedì}   & 1.2               & 5.75              & 0                   & 0                 \\ \hline
+		\textbf{Mercoledì} & 2             & 2                 & 2             & 0                 \\ \hline
+		\textbf{Giovedì}   & 0               & 1.25              & 0                   & 0                 \\ \hline
+		\textbf{Venerdì}   & 0               & 0                 & 2.545               & 0                 \\ \hline
+	\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto B:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0              & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 0               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 5             & 0                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 5.71429              & 0                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 4.44444               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto C:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0               & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 5.76923               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 0             & 5                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 0              & 5                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 0               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+\subsubsection{Casi alternativi}
+All'interno di questa sezione verranno presentati alcuni file .dat relativi ad alcune istanze alternative del problema.
+\paragraph{Penale bassa}\mbox{}\\
+Analizziamo ora un caso alternativo in cui i costi relativi alla penale sono sufficientemente bassi da invogliare il solver a focalizzarsi solo ed esclusivamente sulla componente più redditizia piuttosto che sul cercare di produrre il numero minimo di componenti richieste dal cliente.\\
+Le principali modifiche che sono state effettuate al problema originale sono le seguenti:
+\begin{itemize}
+	\item Sono stati abbassati i costi relativi alle penali
+	\item Sono stati alzati guadagni e produzione oraria in modo tale da rendere più evidente i risultati.
+	\item Sono stati alzati notevolmente il numero di componente grezze che si dispone.
+\end{itemize}
+\begin{lstlisting}
+set Prodotti := A B C;
+set Giorni := lun mar mer gio ven;
+set Stati:= grezzo rifinito vernciato lucidato;
+
+param     v :=
+A		  150
+B		  100
+C		  300
+;
+
+
+param    c :=
+grezzo   		 100
+rifinito		 50
+vernciato		 150
+lucidato		 0
+;
+
+param 	 po :    grezzo    rifinito    vernciato    lucidato :=
+A                50        70    	   130   		0         
+B                70        90    	   160    		0
+C                30        50   	   100   		0
+;
+
+param    minUnit :=
+A		 50
+B		 100
+C		 30
+;
+
+param 	 penale :=
+A		 70
+B		 60
+C		 130
+;
+
+param 	 startingUnits :=
+A		 3000
+B	  	 3000
+C		 3000
+;
+
+param o :=8;
+\end{lstlisting}
+I risultati ottenuti sono molto interessanti, infatti aumentando anche solo di poco i costi delle penali, il solver deciderà di consegnare almeno il minimo di numero di unità minimo richiesto.\\
+Dunque è possibile osservare come prima che possa divenire proficua la strategia descritta precedentemente è necessario che i costi relativi alle penali siano all'incirca pari alla meta' dei guadagni derivati dalla vendita.\\
+Il risultato dell'esecuzione del programma coi dati forniti da come risultato un profitto massimo di 154700 euro. Inoltre sarà necessario pagare una penale pari a 9500 euro.
+Per ottenere il seguente risultato è fondamentale seguire il seguente processo produttivo.\\
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto A:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0               & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 0               & 0              	 & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 0             & 0                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 0               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto B:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0              & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 0               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 0             & 0                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 0               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto C:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 8               & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 8               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 8             & 3.2                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 8              & 0                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 5.6               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+\paragraph{Costi e risorse molto più stringenti}\mbox{}\\
+Analizziamo ora un caso in cui costi relativi a macchine e penali sono stati resi molto più stringenti, inoltre sono state abbassate notevolmente il numero di componenti "grezze" a disposizione inizialmente.
+\begin{lstlisting}
+set Prodotti := A B C;
+set Giorni := lun mar mer gio ven;
+set Stati:= grezzo rifinito vernciato lucidato;
+
+param     v :=
+A		  30
+B		  25
+C		  40
+;
+
+
+param    c :=
+grezzo   15
+rifinito		 30
+vernciato		 50
+lucidato		 80
+;
+
+param 	 po :    grezzo    rifinito    vernciato    lucidato :=
+A                10        8    	   11   		0         
+B                8         7    	   9    		0
+C                13        10   	   5   		    0
+;
+
+param    minUnit :=
+A		 20
+B		 40
+C		 10
+;
+
+param 	 penale :=
+A		 100
+B		 100
+C		 100
+;
+
+param 	 startingUnits :=
+A		 40
+B	  	 80
+C		 20
+;
+
+param o :=8;
+\end{lstlisting}
+Il risultato dell'esecuzione del programma coi dati forniti da come risultato un profitto massimo di 1044 euro.
+Per ottenere il seguente risultato è fondamentale seguire il seguente processo produttivo.\\
+Le principali modifiche che sono state effettuate al problema originale sono le seguenti:
+\begin{itemize}
+	\item Sono stati innalzati i costi relativi alle macchine a circa il doppio del prezzo di vendita' di ciascuna componente;
+	\item Sono stati innalzati i costi relativi alle penali;
+	\item Sono state abbassate le componenti "grezze" a disposizione inizialmente a circa il doppio della quantita' minima richiesta dal cliente;
+\end{itemize}
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto A:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 1.5               & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 0.5               & 0              	 & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 1.2             & 1.5                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 1.5              & 0.363636                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 1.45455               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto B:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0              & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 5               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 3.25             & 3.71429                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 3.71429              & 1.33333                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 3.11111               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+
+All'interno della seguente tabella è descritto come suddividere durante la settimana la produzione relativa al prodotto C:
+\begin{table}[H]
+	\centering
+	\setlength{\tabcolsep}{15pt} % Default value: 6pt
+	\renewcommand{\arraystretch}{2} % Default value: 1
+	\begin{center}
+		\begin{tabular}{|l|l|l|l|l|}
+			\hline
+			& \textbf{Grezzo} & \textbf{Rifinito} & \textbf{Verniciato} & \textbf{Lucidato} \\ \hline
+			\textbf{Lunedì}    & 0               & 0                 & 0                   & 0                 \\ \hline
+			\textbf{Martedì}   & 0.461538               & 0              & 0                   & 0                 \\ \hline
+			\textbf{Mercoledì} & 0.769231             & 0.6                 & 0             & 0                 \\ \hline
+			\textbf{Giovedì}   & 0               & 0.7              & 0.6                   & 0                 \\ \hline
+			\textbf{Venerdì}   & 0               & 0                 & 1.4               & 0                 \\ \hline
+		\end{tabular}
+	\end{center}
+\end{table}
+E' interessante osservare come nel risultato ottenuto dal solver, si riesca a malapena ad arrivare al numero minimo di unità richieste dal cliente senza riuscire a produrre alcuna unità in eccesso.
 \end{document}

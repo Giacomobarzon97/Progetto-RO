@@ -3,41 +3,41 @@ set Giorni := lun mar mer gio ven;
 set Stati:= grezzo rifinito vernciato lucidato;
 
 param     v :=
-A		  30
-B		  25
-C		  40
+A		  150
+B		  100
+C		  300
 ;
 
 
 param    c :=
-grezzo   		 15
-rifinito		 25
-vernciato		 10
+grezzo   		 100
+rifinito		 50
+vernciato		 150
 lucidato		 0
 ;
 
 param 	 po :    grezzo    rifinito    vernciato    lucidato :=
-A                10        8    	   11   		0         
-B                8         7    	   9    		0
-C                13        10   	   5   		    0
+A                50        70    	   130   		0         
+B                70        90    	   160    		0
+C                30        50   	   100   		0
 ;
 
 param    minUnit :=
-A		 20
-B		 40
-C		 10
+A		 50
+B		 100
+C		 30
 ;
 
 param 	 penale :=
-A		 35
-B		 35
-C		 35
+A		 70
+B		 60
+C		 130
 ;
 
 param 	 startingUnits :=
-A		 200
-B	  	 300
-C		 100
+A		 3000
+B	  	 3000
+C		 3000
 ;
 
 param o :=8;
